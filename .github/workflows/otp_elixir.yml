@@ -16,7 +16,7 @@ jobs:
         with:
           version: latest
       - name: build the image
-      run: |
+        run: |
         docker buildx build \
           --tag rgafiyatullin/otp-elixir-builder:latest \
           --build-arg OTP_VER=23.3 \
