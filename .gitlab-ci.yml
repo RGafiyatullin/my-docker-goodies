@@ -16,7 +16,7 @@ otp-elixir:
   stage: build
   script:
     - docker buildx create --use
-    - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA .
+    - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA otp_elixir
     - echo "====== BEGIN ======"
     - docker image ls
     - echo "======  END  ======"
