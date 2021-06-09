@@ -1,45 +1,19 @@
-image: jdrouet/docker-with-buildx:stable
-
-variables:
-  DOCKER_HOST: tcp://docker:2375/
-  DOCKER_DRIVER: overlay2
-
+image: docker:19.03.12
 services:
-  - docker:dind
+  - docker:19.03.12-dind
+
+stages:
+  - build
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 otp-elixir:
   only:
-   - dev
+    - main
   stage: build
   script:
-    - docker buildx create --use
-    - docker buildx build --platform linux/arm64/v8,linux/amd64 --tag $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA otp_elixir
-    - echo "====== BEGIN ======"
-    - docker image ls
-    - echo "======  END  ======"
+    - docker build --pull --build-arg OTP_VER=23.3 --build-arg ELIXIR_VER=1.11.3 -t $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA otp_elixir
     - docker tag $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-latest
     - docker push $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA
     - docker push $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-latest
-
-# image: docker:19.03.12
-# services:
-#   - docker:19.03.12-dind
-
-# stages:
-#   - build
-
-# before_script:
-#   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
-# otp-elixir:
-#   only:
-#     - main
-#   stage: build
-#   script:
-#     - docker build --pull --build-arg OTP_VER=23.3 --build-arg ELIXIR_VER=1.11.3 -t $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA otp_elixir
-#     - docker tag $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-latest
-#     - docker push $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-$CI_COMMIT_SHORT_SHA
-#     - docker push $CI_REGISTRY_IMAGE:otp-23.3-elixir-1.11.3-latest
