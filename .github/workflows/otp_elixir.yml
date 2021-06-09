@@ -1,0 +1,24 @@
+name: otp-elixir image
+
+on:
+  push:
+    branches: main dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: install buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+      - name: build the image
+      run: |
+        docker buildx build \
+          --tag rgafiyatullin/otp-elixir-builder:latest \
+          --build-arg OTP_VER=23.3 \
+          --build-arg ELIXIR_VER=1.11.3 \
+          --platform linux/amd64,linux/arm/v7,linux/arm64 ./otp_elixir
