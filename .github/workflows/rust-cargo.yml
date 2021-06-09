@@ -1,4 +1,4 @@
-name: otp-elixir image
+name: rust-cargo image
 
 on:
   push:
@@ -26,7 +26,12 @@ jobs:
         with:
           version: latest
       - name: build the image
-        run: docker buildx build --tag ${{ env.IMAGE_NAME }} --platform linux/amd64 ./rust-cargo
+        run: |
+          docker buildx build \
+            --tag ${{ env.IMAGE_NAME }} \
+            --platform linux/amd64 \
+            --output 'type=image,push=true' \
+            ./rust-cargo
       - name: push the image
         run: docker push ${{ env.IMAGE_NAME }}
   build-arm64:
@@ -48,7 +53,12 @@ jobs:
         with:
           version: latest
       - name: build the image
-        run: docker buildx build --tag ${{ env.IMAGE_NAME }} --platform linux/arm64 ./rust-cargo
+        run: |
+          docker buildx build \
+            --tag ${{ env.IMAGE_NAME }} \
+            --platform linux/arm64 \
+            --output 'type=image,push=true' \
+            ./rust-cargo
       - name: push the image
         run: docker push ${{ env.IMAGE_NAME }}
   build-armv7:
@@ -70,6 +80,11 @@ jobs:
         with:
           version: latest
       - name: build the image
-        run: docker buildx build --tag ${{ env.IMAGE_NAME }} --platform linux/arm/v7 ./rust-cargo
+        run: |
+          docker buildx build \
+            --tag ${{ env.IMAGE_NAME }} \
+            --platform linux/arm/v7 \
+            --output 'type=image,push=true' \
+            ./rust-cargo
       - name: push the image
         run: docker push ${{ env.IMAGE_NAME }}
