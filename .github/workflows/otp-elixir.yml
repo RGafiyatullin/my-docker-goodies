@@ -7,7 +7,7 @@ on:
      - dev/otp-elixir
 
 jobs:
-  xbuild:
+  buildx:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ghcr.io/$( echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' ):otp-elixir-builder_${{ github.sha }}
